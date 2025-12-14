@@ -65,6 +65,12 @@ variable "enable_ssh" {
     # default     = false
 }
 
+variable "user_text" {
+    description = "Custom user text to display on the web page"
+    type        = string
+    default     = "Welcome to the webserver!"
+}
+
 variable "tags" {
     description = "Additional tags to apply to resources"
     type        = map(string)

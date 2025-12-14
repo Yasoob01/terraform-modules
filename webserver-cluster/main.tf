@@ -65,10 +65,6 @@ locals {
     tcp_protocol = "tcp"
     http_protocol = "HTTP"
     all_cidr     = "0.0.0.0/0"
-    
-    # User data hash for launch template update detection
-    user_data_hash = filebase64sha256("${path.module}/user_data.sh")
-    user_data_hash_short = substr(local.user_data_hash, 0, 16)  # First 16 chars for readability
 }
 
 # Launch Template for Auto Scaling Group
@@ -83,12 +79,8 @@ resource "aws_launch_template" "webserver" {
         server_port         = var.server_port
         db_instance_address = data.terraform_remote_state.db.outputs.db_instance_address
         db_instance_port    = data.terraform_remote_state.db.outputs.db_instance_port
+        user_text           = var.user_text
     }))
-
-    # Include user_data hash in tags to force update detection
-    tags = {
-        UserDataHash = local.user_data_hash_short
-    }
 
     tag_specifications {
         resource_type = "instance"
@@ -96,7 +88,6 @@ resource "aws_launch_template" "webserver" {
             {
                 Name        = "${var.environment}-webserver-instance"
                 Environment = var.environment
-                UserDataHash = local.user_data_hash_short
             },
             var.tags
         )

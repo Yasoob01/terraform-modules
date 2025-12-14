@@ -6,6 +6,7 @@ cat > index.html <<EOF
         <p>This is a test instance. On Port: ${server_port}</p>
         <p>Database Address: ${db_instance_address}</p>
         <p>Database Port: ${db_instance_port}</p>
+        <p>User Message: ${user_text}</p>
     </body>
 </html>
 EOF
