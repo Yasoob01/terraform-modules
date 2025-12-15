@@ -130,7 +130,7 @@ resource "aws_autoscaling_group" "webserver" {
 
     launch_template {
         id      = aws_launch_template.webserver.id
-        version = "$Latest"  # Always use latest version
+        version = aws_launch_template.webserver.latest_version
     }
 
     min_size         = var.min_size
@@ -143,10 +143,12 @@ resource "aws_autoscaling_group" "webserver" {
     health_check_grace_period = 300
 
     # Instance refresh configuration
+
     instance_refresh {
         strategy = "Rolling"
         preferences {
             min_healthy_percentage = 50
+            instance_warmup        = 300
         }
     }
 
@@ -171,6 +173,7 @@ resource "aws_autoscaling_group" "webserver" {
         }
     }
 }
+
 
 # Application Load Balancer
 resource "aws_lb" "webserver" {
